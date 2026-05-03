@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Verification Harness Just Got Productized. Twice. On the Same Day.</title>
+<meta name="description" content="On April 30, 2026, Cursor and Anthropic shipped the same verification product on the same day. Here is what changed for engineering teams who have been building their own.">
+<meta name="author" content="Han HELOIR YAN">
+<style>
+body {
+  font-family: 'Charter', 'Georgia', 'Cambria', 'Times New Roman', serif;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  line-height: 1.65;
+  color: #292929;
+  font-size: 18px;
+  background: #ffffff;
+}
+h1 {
+  font-size: 38px;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 600;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+.subtitle {
+  font-size: 22px;
+  color: #6B6B6B;
+  font-weight: 400;
+  line-height: 1.35;
+  margin-bottom: 32px;
+}
+p {
+  margin: 0 0 24px 0;
+}
+a {
+  color: #1a8917;
+  text-decoration: underline;
+}
+strong { font-weight: 700; }
+em { font-style: italic; }
+blockquote {
+  border-left: 3px solid #292929;
+  padding-left: 20px;
+  margin: 32px 0;
+  font-style: italic;
+  color: #404040;
+}
+figure {
+  margin: 40px 0;
+  text-align: center;
+}
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+figcaption {
+  font-size: 14px;
+  color: #6B6B6B;
+  margin-top: 8px;
+  font-style: italic;
+}
+.divider {
+  text-align: center;
+  margin: 40px 0;
+  color: #6B6B6B;
+  letter-spacing: 8px;
+}
+</style>
+</head>
+<body>
+
+<h1>The Verification Harness Just Got Productized. Twice. On the Same Day.</h1>
+<p class="subtitle">On April 30, 2026, two coding platforms shipped the same security product on the same day. Here is what changed for engineering teams who have been building their own.</p>
+
+<p>On April 30, 2026, two coding platforms shipped the same security product on the same day.</p>
+
+<p>Cursor released Cursor Security Review: two always-on agents that scan every pull request and run scheduled vulnerability sweeps. Anthropic moved Claude Security from research preview into public beta: codebase scans, multi-stage self-validation, fix-in-context patches. Different vendors. Different model strategies. Different go-to-market motions. Identical product surfaces.</p>
+
+<p>If you spent the last year wiring up <code>/security-review</code> skills, GitHub Actions hooks, custom SAST integrations, and bespoke verification scripts, you now have a packaged competitor with better data, faster model iteration, and a release cycle no internal team can sustain.</p>
+
+<p>Here is what changed in one sentence: the part of your agent stack that verifies what the agent did, the part most teams have been quietly building themselves, just became something you buy.</p>
+
+<p>That changes three things. What you build. What you buy. And where the next round of engineering differentiation actually lives.</p>
+
+<h2>Before We Start! 🦸🏻‍♀️</h2>
+
+<p>If this helps you ship better AI systems: 👏 Clap 50 times (yes, you can!). Medium's algorithm favors this, increasing visibility to others who then discover the article. 🔔 Follow me on <a href="https://medium.com/@han.heloir">Medium</a>, <a href="https://www.linkedin.com/in/hanheloiryan/">LinkedIn</a> and <a href="https://medium.com/@han.heloir/about">subscribe</a> to get my latest article.</p>
+
+<div class="divider">. . .</div>
+
+<h2>What Got Shipped</h2>
+
+<p>Cursor's release went live at 11:58 AM Pacific. Anthropic's announcement landed the same morning. Both products went from internal dogfooding to public beta on the same day, after parallel two-month preview cycles inside a few hundred enterprise customers.</p>
+
+<h3>What Cursor shipped</h3>
+
+<p>Cursor Security Review runs two always-on agents.</p>
+
+<p><strong>Security Reviewer</strong> scans every PR. Five categories: vulnerabilities, auth regressions, privacy and data-handling risks, agent tool auto-approvals, and prompt injection attacks. Inline comments at the exact diff location, severity tagged, remediation included. It can block CI on findings.</p>
+
+<p><strong>Vulnerability Scanner</strong> runs scheduled background scans of the full codebase. Known CVEs, outdated dependencies, configuration issues. Findings post to Slack on a configurable cadence.</p>
+
+<p>Both agents are customizable: triggers, instructions, custom tooling, output routing. You can plug in MCP servers for existing SAST, SCA, or secrets scanners and have Cursor invoke them as part of the review.</p>
+
+<p>Cursor's own changelog calls this out plainly: "We're also continuously improving the runtime, harness, and models powering Cursor Security Review." They literally call it a harness. The same SDK released the same day exposes that harness as a buildable platform: "Build agents with the same runtime, harness, and models that power Cursor."</p>
+
+<p>The internal version had been running on Cursor's own monorepo since early March, on thousands of PRs, blocking hundreds of issues before they reached production. The April 30 release packages two months of internal validation into a customer-facing product.</p>
+
+<h3>What Anthropic shipped</h3>
+
+<p>Claude Security moved from research preview to public beta. Powered by Opus 4.7. Lives at claude.ai/security with no API integration required.</p>
+
+<p>The scanning logic reads the codebase the way a security researcher would: tracing data flows across files, reading source, examining how components interact. Not pattern matching against signatures.</p>
+
+<p>The branded mechanism is <strong>multi-stage validation</strong> (Anthropic's blog) or <strong>adversarial verification pass</strong> (the product page). Same thing in two phrasings: every finding goes through Claude challenging its own conclusion before surfacing it. The verification of the verifier is the productized feature.</p>
+
+<p>Each surfaced finding ships with a confidence rating, severity, likely impact, reproduction path, and a targeted patch openable in Claude Code on the Web. Operationally: scheduled scans, directory or branch scoping, dismiss-with-reason, CSV/Markdown export, webhooks to Slack, Jira, and other trackers.</p>
+
+<p>The partner roster signals the strategy. Opus 4.7 is being embedded into CrowdStrike (Project Quiltworks), Microsoft Security, Palo Alto Networks, SentinelOne (Wayfinder AI), TrendAI, and Wiz. Services partners (Accenture, BCG, Deloitte, Infosys, PwC) handle deployment. Notably absent from both lists: SAST and dependency-scanning vendors. The "findings as product" category is not in the deal flow.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-01.png" alt="Side-by-side comparison of Cursor Security Review and Claude Security across six product dimensions">
+  <figcaption>Two vendors. Same six dimensions. One day.</figcaption>
+</figure>
+
+<h3>What the convergence tells you</h3>
+
+<p>Two independent product orgs landed on the same surface in the same window. Read the feature lists side by side and the overlap is uncomfortable: PR-level inline review, scheduled background scans, confidence-rated findings, fix-in-context, third-party tool integration, configurable scopes and cadence.</p>
+
+<p>This is not coincidence. It is what happens when a category settles. The product surface for AI-driven security review has stabilized, and two of the strongest engineering organizations in the space shipped the settled version on the same business day. That is the strongest market signal you will get.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-02.png" alt="Timeline showing parallel dogfooding from February 20 through April 30, 2026">
+  <figcaption>Two parallel two-month internal experiments ended on the same day.</figcaption>
+</figure>
+
+<h2>Five Moving Parts of Any Agent System</h2>
+
+<p>Step back from the news for a moment. Any production agent system, regardless of vendor or use case, has the same five moving parts.</p>
+
+<p><strong>Rules it follows.</strong> The hard limits, dependency contracts, and architectural boundaries the agent cannot cross. The skeleton.</p>
+
+<p><strong>Knowledge of your code.</strong> What the agent reads to do useful work: the codebase, conventions, prior PRs, design docs. The memory.</p>
+
+<p><strong>Tools it can call.</strong> The shells, sandboxes, MCP servers, and sub-agents the agent reaches for when it acts. The hands.</p>
+
+<p><strong>Checks on its work.</strong> What runs after the agent produces output, looking for what is wrong before a human ever sees it. The immune system.</p>
+
+<p><strong>A way of staying alive.</strong> Crash recovery, session resumption, cost tracking, health monitoring. The lifecycle.</p>
+
+<p>These five pieces show up in every working agent system you have ever used or built, whether the vendor names them or not. Cursor's coding agents have them. Claude Code has them. Your internal agent has them. The names differ; the geography does not.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-03.png" alt="Five moving parts of any agent system with the checking piece highlighted">
+  <figcaption>Five pieces. The fourth one is the piece both vendors just shipped.</figcaption>
+</figure>
+
+<p>Most engineering teams build all five themselves, because most vendors only ship two or three. You write the rules in <code>.cursorrules</code> or <code>CLAUDE.md</code>. You invest in retrieval and context engineering for the codebase. You wire MCP servers and tool integrations. You build evaluation hooks, test suites, and review automations. You set up monitoring and crash recovery.</p>
+
+<p>Of these five, the one with the highest leverage per engineering hour, the one most teams quietly invest the most in, is the fourth: the checks on the agent's work. The immune system.</p>
+
+<p>That is the piece both Cursor and Anthropic shipped on April 30.</p>
+
+<p>Not the rules. Not the knowledge. Not the tools. Not the lifecycle.</p>
+
+<p>The checking.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-04.png" alt="Coverage map showing what each platform ships versus what customers still build themselves">
+  <figcaption>The checking column was the only one that flipped from build-it to buy-it on April 30, across both major coding platforms.</figcaption>
+</figure>
+
+<h2>Why the Checking Piece Is Where Leverage Lives</h2>
+
+<p>The piece both vendors shipped is the one engineers call <strong>verification</strong>.</p>
+
+<p>Verification is the part of the agent system that runs after the agent produces output, looking for what is wrong before a human ever sees it. SQL injection in the PR diff. An auth regression in the auto-generated middleware. A prompt injection vector in a new MCP tool definition. The agent does not catch these. The verification layer does.</p>
+
+<p>Why both vendors spent their flagship security investment specifically here, and not on the other four pieces, comes down to four properties that no other piece shares.</p>
+
+<h3>Verification compounds with usage data</h3>
+
+<p>Rules are static. You write them once and they sit there. Tools are static too: an MCP server's capabilities are what they are. Knowledge of your code is codebase-specific and does not generalize across customers.</p>
+
+<p>Verification is the only piece that gets <em>better</em> the more it runs. Every false positive a customer dismisses with a documented reason becomes training signal. Every confirmed finding becomes a pattern. Every adversarial verification pass that catches its own model's mistake becomes a benchmark for the next version.</p>
+
+<p>This is why Anthropic's release notes specifically call out scheduled scans, dismiss-with-reason, and confidence ratings. These are not features. They are data collection mechanisms for the verification model. Cursor's note that they are continuously improving the runtime, harness, and models powering Cursor Security Review is the same admission in different words.</p>
+
+<p>The vendor that owns the verification surface across thousands of enterprises has a feedback loop no internal team can match.</p>
+
+<h3>Verification runs on every PR</h3>
+
+<p>Rules run once at agent startup. Tools run when the agent decides to call them. Lifecycle runs in the background. Knowledge runs whenever the model fetches context.</p>
+
+<p>Verification runs on every change. Every PR. Every push. Every scheduled scan window. The execution frequency makes it the highest-volume surface in the agent stack, which means it is the surface where managed infrastructure compounds fastest and homegrown infrastructure rots fastest.</p>
+
+<p>If you built a custom verification pipeline 18 months ago, the model behind it is now stale, the prompt is now stale, the eval set is now stale, and the maintenance cost has compounded the entire time. The same pipeline shipped as a managed product gets a new model swap every few months without you doing anything.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-05.png" alt="The verification flow from code to finding to adversarial self-challenge to analyst review">
+  <figcaption>The self-challenge step in the middle is the productized "verify the verifier" mechanism.</figcaption>
+</figure>
+
+<h3>Verification is where the customer feels speed</h3>
+
+<p>Time-to-fix is the metric every security team actually measures. Anthropic's customer testimonials all say the same thing in different words. Hebbia: close real vulnerabilities in minutes, not days. DoorDash: pipes findings into engineer workflows so the team can act in context. The Anthropic blog is direct: time from scan to fix is the metric that matters.</p>
+
+<p>The other four pieces of the agent stack do not show up on a security team's quarterly dashboard. Verification does. So the vendor that ships the best verification ships the only piece of the stack that visibly accelerates the customer's existing measurable workflow.</p>
+
+<h3>Verification is where adversarial self-checking lives</h3>
+
+<p>This is the deepest one, and it is what both vendors are quietly betting on.</p>
+
+<p>Anthropic calls it an <strong>adversarial verification pass</strong>: every finding goes through Claude challenging its own conclusion before surfacing it. The Help Center calls it a <strong>multi-stage validation pipeline</strong>: each finding is independently re-examined.</p>
+
+<p>Cursor's product is built the same way internally: a primary security agent runs first, then specialized sub-agents (privacy check, auth check, more domains coming) re-examine the primary agent's findings. The verification of the verifier is the productized feature.</p>
+
+<p>This pattern (verify the model, then verify the verifier) is the most expensive thing to build correctly. It requires running multiple model passes, comparing outputs, calibrating confidence, and surfacing only what survives the cross-check. A solo engineer cannot afford it. A platform with millions of monthly verification runs can.</p>
+
+<p>When both vendors shipped the same day, both shipped the same self-critique loop. Not the same UI. Not the same model. The same pattern. That is where the moat actually is.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-06.png" alt="Four properties that make verification the highest-leverage piece of the agent stack">
+  <figcaption>Four reasons verification is the piece both vendors picked, not the others.</figcaption>
+</figure>
+
+<h2>The Harness Eating Itself</h2>
+
+<p>Here is the line worth circling.</p>
+
+<p>The verification piece that custom security review pipelines created competitive advantage from, the piece that justified six months of internal engineering investment at every coding-heavy company in 2025, just got compressed into a billing line under "Cursor Teams" and "Claude Enterprise."</p>
+
+<p><strong>The harness ate itself.</strong></p>
+
+<p>Verification was the piece engineering teams were quietly proudest of. The custom <code>/security-review</code> skill tuned to the company's threat model. The GitHub Action that runs the right SAST scanner against the right diff with the right severity rules. The internal evaluation suite that catches regressions before they ship. The Slack bot that surfaces high-confidence findings to the right reviewer.</p>
+
+<p>All of it was real engineering work. Most of it solved real problems. None of it competes with what Cursor and Anthropic shipped on April 30, because what Cursor and Anthropic shipped is the same shape, with better data, faster model iteration, and managed infrastructure that improves while you sleep.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-07.png" alt="Custom verification harness from 2025 versus packaged managed product on April 30, 2026">
+  <figcaption>The same surface delivered as one toggle in an admin console.</figcaption>
+</figure>
+
+<h3>What this means for builders of custom verification</h3>
+
+<p>If you built one, you have three honest options.</p>
+
+<p>The first is to keep maintaining it and accept that you are now competing with a managed product whose model swap happens without you. This is sustainable only if your custom logic captures something the managed product cannot reach. Most do not.</p>
+
+<p>The second is to migrate to the managed product and redirect the engineering hours into the pieces of the stack that did not get productized. This is the right answer for most teams.</p>
+
+<p>The third is to keep the custom harness for the things the managed products do not cover, and route everything else through the managed verification surface. This is where most sophisticated teams will land within a quarter. The work is no longer "build the verification harness." The work is "decide where the managed harness ends and yours begins."</p>
+
+<h3>What this means for AppSec vendors</h3>
+
+<p>Mitch Ashley at Futurum Group put it plainly the morning of the launch: "Pressure lands on vendors selling findings as the product. With endpoint and cloud security platforms embedding Opus 4.7 directly, the model layer is becoming a substrate for the security stack. Incumbents whose value lives in the detection-fix gap have to close it or lose the workflow."</p>
+
+<p>Translation: if your product is "we tell you what is wrong with your code," you are now competing with two coding platforms that tell users what is wrong with their code as a side effect of writing it.</p>
+
+<p>Look at the partner roster Anthropic published with the release. CrowdStrike, Microsoft Security, Palo Alto Networks, SentinelOne, TrendAI, Wiz. All endpoint, identity, runtime, and cloud security companies. All embedding Opus 4.7 into their existing products. None of them sell findings. They all sell continuous enforcement at runtime.</p>
+
+<p>Now look at who is missing from the partner roster. Snyk. Veracode. Checkmarx. JFrog. Every traditional SAST and SCA vendor whose product is fundamentally "scan and surface findings." They are not in the deal flow because the product they sell is the product Anthropic just shipped for free with an Enterprise seat.</p>
+
+<p>The vendors whose value lives at runtime become substrate. The vendors whose value lives in the detection-fix gap become application. JFrog dropped 25 percent on the February 20 preview announcement for a reason.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-08.png" alt="Vendor map showing substrate vendors, displaced vendors, and the new verification platforms">
+  <figcaption>Who becomes substrate. Who becomes application. Who shipped the new substrate.</figcaption>
+</figure>
+
+<h3>What this means for the harness thesis</h3>
+
+<p>The five-piece framing from earlier predicted that verification was the highest-leverage piece of any agent stack. April 30 confirmed half of that prediction and overturned the other half on the same day.</p>
+
+<p>Confirmed: this <em>is</em> where leverage lives. Both flagship coding platforms put their flagship security investment specifically here. Not constraint engineering. Not context engineering. Not tooling. Verification.</p>
+
+<p>Overturned: the implicit assumption that customers should <em>build</em> their own verification. As of April 30, customers can buy the highest-volume verification surface (vulnerability scanning and PR-level review) at the platform level, with feedback loops and model iteration no internal team can match.</p>
+
+<p>The harness ate itself in the most literal sense possible. The piece engineers spent the most time building is now the piece the platform ships. The advice from a year ago (build verification, that is where leverage compounds) is now the advice for a different question (decide what the platform's verification cannot reach, build that instead).</p>
+
+<p>That is the question the next section answers.</p>
+
+<h2>Where Building Still Beats Buying</h2>
+
+<p>The managed verification products both shipped on April 30 cover one thing extraordinarily well: static analysis of source code at PR time and at scheduled scan windows. SQL injection, auth regressions, dependency vulnerabilities, prompt injection vectors in code. That surface is now commodity.</p>
+
+<p>Everything outside that surface is still the customer's problem. And it is a much larger surface than what just got productized.</p>
+
+<h3>The runtime gap</h3>
+
+<p>Static analysis, no matter how good the model, runs on source code. It cannot see what actually happens when the code runs.</p>
+
+<p>Datadog's State of DevSecOps report is the cleanest data point on what this costs. Of vulnerabilities flagged as critical by traditional scanners, only about 20 percent are actually exploitable in production. The other 80 percent are noise: critical-rated findings in code paths that no real input ever reaches, sitting behind authentication that filters them out, or compiled out of the production binary entirely.</p>
+
+<p>Endor Labs found the same pattern in different language: 92 percent of vulnerabilities lacking reachability context are noise. Without knowing what the running application actually does with the flagged code, you cannot tell which findings matter.</p>
+
+<p>Claude Security and Cursor Security Review do not solve this. They produce smarter findings, with confidence ratings and severity assessments, but the assessments are derived from reading code, not from observing the application running. The runtime reachability layer is still build-it-yourself.</p>
+
+<h3>Business logic is not in the source</h3>
+
+<p>Broken object-level authorization (BOLA), broken auth flows, and business-logic flaws are the OWASP API Top 10 vulnerabilities that drive actual breaches. They live in the gap between what the code says and what the application does for a given user in a given session.</p>
+
+<p>Consider a finding both products would miss: a deletion endpoint that correctly checks the user is authenticated, correctly parses the resource ID, and correctly issues the delete. Code reads clean. The flaw is that the endpoint never checks whether the authenticated user <em>owns</em> the resource. To catch that, you need to understand the application's authorization model, not its code.</p>
+
+<p>Column's testimonial in the Anthropic launch ("Claude Security grasps the actual business logic behind our code") points at this surface, but the testimonial is the marketing claim, not the product capability. Reading source carefully helps. Verifying authorization logic against an actual session model still requires runtime context that neither product has.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-09.png" alt="Verification surface map showing what is covered by managed products versus what remains the customer's problem">
+  <figcaption>Code boundary covered. Runtime, business logic, agent runtime, supply chain still entirely yours.</figcaption>
+</figure>
+
+<h3>Agent runtime authorization</h3>
+
+<p>This is the one that matters most for the readers of this article.</p>
+
+<p>Both products review code that humans or agents wrote. Neither product reviews what an agent does <em>while it runs</em>. An agent that has been given tool access through MCP, that decides to call <code>delete_files</code> or <code>exfiltrate_credentials</code> based on a prompt-injected instruction in a fetched web page, is making a runtime decision that no static scanner sees.</p>
+
+<p>The verification of <em>what code an agent writes</em> is now a managed product. The verification of <em>what an agent does at runtime</em> is still entirely the customer's problem. Per IBM's recent research on agentic AI runtime security, this requires identity-aware enforcement, session-level context tracking, and out-of-band re-authentication for high-risk actions. None of it lives in the codebase.</p>
+
+<p>If the harness thesis is right that verification is the highest-leverage piece, the next leverage point is not static verification of source. It is dynamic verification of agent behavior. The frontier moved.</p>
+
+<h3>MCP supply chain and tool poisoning</h3>
+
+<p>MCP servers are now the standard way coding agents reach external systems. Cursor's own Security Reviewer specifically calls out "agent tool auto-approvals" as one of the five categories it scans. That is the tip of the problem, not the whole problem.</p>
+
+<p>A poisoned MCP server can rewrite agent behavior across every project that uses it. A subtle change to a tool's response schema can leak credentials into the agent's context window. Recent research has documented prompt injection attacks that survive across IDE restarts by sitting in MCP configuration files. Static review of the codebase that <em>uses</em> the MCP server cannot see whether the MCP server itself is trustworthy.</p>
+
+<p>Verifying MCP supply chain integrity, monitoring tool invocation patterns at runtime, and enforcing least-privilege access at the protocol layer are all build-it-yourself today. They are also where the next round of differentiation lives for any team operating agents at scale.</p>
+
+<h3>Where the work moved</h3>
+
+<p>The map of build vs. buy for the verification piece used to be: you build it, the platforms ship the model. As of April 30, the static-source-analysis half of that map is now: the platforms build it, you consume it.</p>
+
+<p>The runtime, business-logic, agent-behavior, and supply-chain halves of the verification surface are still entirely yours. They are also harder, less commoditized, and more directly tied to the specific architecture of your application. Which is to say: they are the only places left where verification engineering still creates competitive advantage.</p>
+
+<p>The shift is not from verification matters to verification does not matter. The shift is from build the code-scan layer to build the runtime-and-behavior layer. Same thesis, different surface.</p>
+
+<figure>
+  <img src="https://raw.githubusercontent.com/Cozypet/verification-harness-productized/main/images/diagram-10.png" alt="Where verification differentiation moves next: from static source to runtime, business logic, and agent behavior">
+  <figcaption>The frontier of verification engineering moved up the stack on April 30.</figcaption>
+</figure>
+
+<h2>The Line Worth Carrying</h2>
+
+<p>The verification piece of the agent stack is no longer where you differentiate by building. It is where you differentiate by knowing exactly what the packaged product cannot reach, and building only that. Cursor and Anthropic just told you which half of the surface is theirs. The other half, the runtime, the business logic, the agent behavior, the supply chain, is still yours. That is where the engineering hours go next.</p>
+
+<div class="divider">. . .</div>
+
+<h2>Credits and Further Reading</h2>
+
+<ul>
+<li><a href="https://claude.com/blog/claude-security-public-beta">Claude Security is now in public beta</a> (Anthropic, April 30, 2026). Primary source for Claude Security launch.</li>
+<li><a href="https://cursor.com/changelog/04-30-26">Cursor Security Review</a> (Cursor changelog, April 30, 2026). Primary source for Cursor Security Review launch.</li>
+<li><a href="https://cursor.com/blog/security-agents">Securing our codebase with autonomous agents</a> (Cursor, March 2026). The internal Agentic Security Review post that became the productized feature.</li>
+<li><a href="https://devops.com/anthropic-brings-ai-powered-security-scanning-to-enterprise-teams-with-claude-security/">Anthropic Brings AI-Powered Security Scanning to Enterprise Teams</a> (DevOps.com, May 2026). Source for Mitch Ashley's substrate quote.</li>
+<li><a href="https://www.resilientcyber.io/p/claude-code-security-a-reasoned-take">Claude Code Security: A Reasoned Take on What It Means for AppSec</a> (Resilient Cyber). Strong analysis of structural gaps in static AI verification.</li>
+<li><a href="https://www.ibm.com/think/insights/agentic-ai-runtime-security">Establishing Runtime Security for Agentic AI</a> (IBM). Framework for the runtime authorization gap.</li>
+</ul>
+
+<p style="color: #6B6B6B; font-size: 14px; margin-top: 60px; text-align: center;">Created by Han HELOIR YAN</p>
+
+</body>
+</html>
